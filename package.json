@@ -1,0 +1,22 @@
+{
+  "name": "badal",
+  "version": "1.0.0",
+  "description": "Azure application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KhushiRajpal/Badal.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KhushiRajpal/Badal/issues"
+  },
+  "homepage": "https://github.com/KhushiRajpal/Badal#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
