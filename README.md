@@ -1,5 +1,7 @@
 # Badal
 Azure Microsoft Future Learning Program:
+
+
 Technologies used :
 1) Azure Maps
 2) Visual Studio Code
