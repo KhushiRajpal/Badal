@@ -9,10 +9,10 @@ var storeLocationDataUrl = 'static/data/ContosoCoffee.txt';
 var iconImageUrl = 'static/images/CoffeeIcon.png';
 
 //An array of country region ISO2 values to limit searches to.
-var countrySet = ['US', 'CA', 'GB', 'FR','DE','IT','ES','NL','DK'];      
+var countrySet = ['US', 'CA', 'GB', 'FR','DE','IT','ES','NL','DK','IN'];      
 
 var map, popup, datasource, iconLayer, centerMarker, searchURL;
-var listItemTemplate = '<div class="listItem" onclick="itemSelected(\'{id}\')"><div class="listItem-title">{title}</div>{city}<br />Open until {closes}<br />{distance} miles away</div>';
+var listItemTemplate = '<div class="listItem" onclick="itemSelected(\'{id}\')"><div class="listItem-title">{title}</div>{city}<br />{distance} miles away</div>';
 
 function initialize() {
     //Initialize a map instance.
@@ -33,6 +33,7 @@ function initialize() {
 
     //Create a popup but leave it closed so we can update it and display it later.
     popup = new atlas.Popup();
+	
 
     //Use MapControlCredential to share authentication between a map control and the service module.
     var pipeline = atlas.service.MapsURL.newPipeline(new atlas.service.MapControlCredential(map));
@@ -50,8 +51,19 @@ function initialize() {
         }
     };
 
-    //If the user presses the My Location button, use the geolocation API to get the users location and center/zoom the map to that location.
+    
     document.getElementById('myLocationBtn').onclick = setMapToUserLocation;
+	
+	document.getElementById('pickRestaurantBtn').onclick = function (e) {
+		var data2 = map.layers.getRenderedShapes(map.getCamera().bounds, [iconLayer]);
+		
+		var final=  data2[Math.floor(Math.random() * data2.length)];
+		console.log("BUTTON CLICK", final);
+		showPopup(final);
+
+
+        
+    };
 
     //Wait until the map resources are ready.
     map.events.add('ready', function () {
@@ -191,18 +203,34 @@ function loadStoreData() {
                 if (row.length >= numColumns) {
 
                     features.push(new atlas.data.Feature(new atlas.data.Point([parseFloat(row[header['Longitude']]), parseFloat(row[header['Latitude']])]), {
-                        AddressLine: row[header['AddressLine']],
-                        City: row[header['City']],
-                        Municipality: row[header['Municipality']],
-                        AdminDivision: row[header['AdminDivision']],
-                        Country: row[header['Country']],
-                        PostCode: row[header['PostCode']],
-                        Phone: row[header['Phone']],
-                        StoreType: row[header['StoreType']],
-                        IsWiFiHotSpot: (row[header['IsWiFiHotSpot']].toLowerCase() === 'true') ? true : false,
-                        IsWheelchairAccessible: (row[header['IsWheelchairAccessible']].toLowerCase() === 'true') ? true : false,
-                        Opens: parseInt(row[header['Opens']]),
-                        Closes: parseInt(row[header['Closes']])
+                        RestaurantId: row[header['RestaurantId']],
+                        RestaurantName: row[header['Restaurant Name']],
+						CountryCode: row[header['CountryCode']],
+						City: row[header['City']],
+						Address: row[header['Address']],
+						Locality: row[header['Locality']],
+						LocalityVerbose: row[header['Locality Verbose']],
+						Cuisines: row[header['Cuisines']],
+						AverageCostfortwo : row[header['Average Cost for two']],
+						Currency: row[header['Currency']],
+						HasTablebooking: row[header['Has Table Booking']],
+						HasOnlinedelivery: row[header['Has Online Delivery']],
+						Isdeliveringnow: row[header['Is delivering now']],
+						Switchtoordermenu: row[header['Switch to order menu']],
+						Aggregaterating : row[header['Aggregate rating']],
+						RatingColor: row[header['Rating color']],
+						RatingText: row[header['Rating text']],
+						Votes: row[header['Votes']]
+
+                        // Municipality: row[header['Municipality']],
+                        // AdminDivision: row[header['AdminDivision']],
+                        // PostCode: row[header['PostCode']],
+                        // Phone: row[header['Phone']],
+                        // StoreType: row[header['StoreType']],
+                        // IsWiFiHotSpot: (row[header['IsWiFiHotSpot']].toLowerCase() === 'true') ? true : false,
+                        // IsWheelchairAccessible: (row[header['IsWheelchairAccessible']].toLowerCase() === 'true') ? true : false,
+                        // Opens: parseInt(row[header['Opens']]),
+                        // Closes: parseInt(row[header['Closes']])
                     }));
                 }
             }
@@ -266,6 +294,10 @@ function setMapToUserLocation() {
     });
 }
 
+// function createSecondPopup() { so here you need to check if user location is gotten , rha
+
+// }
+
 function updateListItems() {
     //Hide the center marker.
     centerMarker.setOptions({
@@ -306,6 +338,7 @@ function updateListItems() {
 
         //Get all the shapes that have been rendered in the bubble layer. 
         var data = map.layers.getRenderedShapes(map.getCamera().bounds, [iconLayer]);
+		
 
         //Create an index of the distances of each shape.
         var distances = {};
@@ -325,9 +358,10 @@ function updateListItems() {
 
         data.forEach(function (shape) {
             properties = shape.getProperties();
+			//console.log("Data is", data);
 
             html.push('<div class="listItem" onclick="itemSelected(\'', shape.getId(), '\')"><div class="listItem-title">',
-                properties['AddressLine'],
+                properties['Address'],
                 '</div>',
 
                 //Get a formatted address line 2 value that consists of City, Municipality, AdminDivision, and PostCode.
@@ -407,6 +441,9 @@ function itemSelected(id) {
     });
 }
 
+//when that button is clicked , check 330 ka size, randomly pick one , and pass that to showpopup 
+//add a check with showpopup, if its this one, then youve made it
+
 function showPopup(shape) {
     var properties = shape.getProperties();
 
@@ -435,35 +472,35 @@ function showPopup(shape) {
     var html = ['<div class="storePopup">'];
 
     html.push('<div class="popupTitle">',
-        properties['AddressLine'],
+        properties['Address'],
         '<div class="popupSubTitle">',
         getAddressLine2(properties),
         '</div></div><div class="popupContent">',
 
         //Convert the closing time into a nicely formated time.
-        getOpenTillTime(properties),
+        //getOpenTillTime(properties),
 
         //Add the distance information.  
         '<br/>', distance,
         ' miles away',
         '<br /><img src="static/images/PhoneIcon.png" title="Phone Icon"/><a href="tel:',
-        properties['Phone'],
+        properties['Rating'],
         '">', 
-        properties['Phone'],
+        properties['Rating'],
         '</a>'
     );
 
-    if (properties['IsWiFiHotSpot'] || properties['IsWheelchairAccessible']) {
-        html.push('<br/>Amenities: ');
+    // if (properties['IsWiFiHotSpot'] || properties['IsWheelchairAccessible']) {
+    //     html.push('<br/>Amenities: ');
 
-        if (properties['IsWiFiHotSpot']) {
-            html.push('<img src="static/images/WiFiIcon.png" title="Wi-Fi Hotspot"/>');
-        }
+    //     if (properties['IsWiFiHotSpot']) {
+    //         html.push('<img src="static/images/WiFiIcon.png" title="Wi-Fi Hotspot"/>');
+    //     }
 
-        if (properties['IsWheelchairAccessible']) {
-            html.push('<img src="static/images/WheelChair-small.png" title="Wheelchair Accessible"/>');
-        }
-    }
+    //     if (properties['IsWheelchairAccessible']) {
+    //         html.push('<img src="static/images/WheelChair-small.png" title="Wheelchair Accessible"/>');
+    //     }
+    // }
 
     html.push('</div></div>');
 
@@ -482,16 +519,16 @@ function showPopup(shape) {
 function getAddressLine2(properties) {
     var html = [properties['City']];
 
-    if (properties['Municipality']) {
-        html.push(', ', properties['Municipality']);
+    if (properties['Locality']) {
+        html.push(', ', properties['Locality']);
     }
 
-    if (properties['AdminDivision']) {
-        html.push(', ', properties['AdminDivision']);
+    if (properties['AverageCostfortwo']) {
+        html.push(', ', properties['AverageCostfortwo']);
     }
 
-    if (properties['PostCode']) {
-        html.push(' ', properties['PostCode']);
+    if (properties['Cuisines']) {
+        html.push(' ', properties['Cuisines']);
     }
 
     return html.join('');
