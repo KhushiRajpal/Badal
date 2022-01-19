@@ -10,6 +10,9 @@
     <meta name="description" content="This tutorial shows how to create a simple store locator." />
     <meta name="keywords" content="Microsoft maps, map, gis, API, SDK, tutorials, store locator, locator, coffee, contoso, clustering" />
     <meta name="author" content="Microsoft Azure Maps" />
+	
+
+	
 
     <!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
     <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
@@ -19,28 +22,81 @@
     <script src="https://atlas.microsoft.com/sdk/javascript/service/2/atlas-service.min.js"></script>
 
     <!-- Add references to the store locator JavaScript and CSS files. -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+	
     <link rel="stylesheet" href="static/index.css" type="text/css" />
     <script src="static/index.js"></script>
 </head>
 <body>
-    
-        <img src="static/images/Logo.png" />
-        <span>Foodie</span>
-    </header>
-    <main>
-        <div class="searchPanel">
-            <div>
-                <input id="searchTbx" type="search" placeholder="Find a new place to eat" />
-                <button id="searchBtn" title="Search"></button>
-            </div>
+	
+		<nav class="navbar navbar-dark bg-dark">
+			<div
+            class="collapse navbar-collapse float-right" id="navcol-1" style="color:rgb(255,255,255);">
+            <ul class="nav navbar-nav ml-auto" role="navigation">
+                <li><a href="#myModal" data-toggle = "modal" data-target= "#myModal" class="nav-link">Contact us</a></li>
+                </ul>
         </div>
+		
+		  </button>
+		  <a class="navbar-brand" href="#">
+			<img src="static/images/Logo1.png" width="30" height="30" class="d-inline-block align-top" alt="">
+			Foodie
+		  </a>
+		</nav>
+	  
+    <main>
+		
+        <div class="searchPanel">
+            <div class="container">
+                <input id="searchTbx" type="search" placeholder="Find a new place to eat"  style="display:inline"/>
+                <button class="btn btn-primary"id="searchBtn" title="Search" style="display:inline"></button>
+			
+			
+				<button type="button" style="display:inline"  class="btn bg-transparent " id="modalbutton" data-toggle="modal" data-target="#exampleModalScrollable"> </button>
+  
+  <!-- Modal -->
+  <div class="modal show" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-scrollable" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="exampleModalScrollableTitle">Try something new</h5>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+		  This is a simple interface for you to randomly pick a new restaurant near you and/or explore different ones all over the world. <br>
+		  Steps : <br>
+		  1)  Click on find me, and then the restaurant locator to find a new place to try out today :) <br>
+		  2)  Also feel free to look at different restaurants all over the world. <br>	
+		  3)  Change is good and you never know what could happen. (Yes, I do mean diarrhea.)
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		  
+		</div>
+	  </div>
+	</div>
+  </div>
+        </div>
+	</div>
 
-        <div id="listPanel"></div>
+        <div class="list-group" id="listPanel"></div>
 
-        <div id="myMap"></div>
-
-        <button id="myLocationBtn" title="My Location"></button>
-		<button id="pickRestaurantBtn" title=" Pick a restaurant for me"></button>
+        <div id="myMap" class="img-fluid"></div>
+		
+        <button id="myLocationBtn" class="btn btn-primary mr-1 ml-4" title="My Location">Find me</button>
+		<button id="pickRestaurantBtn" class="btn btn-primary "  title=" Pick a restaurant for me">Pick a random restaurant</button>
+	
     </main>
+	 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+	 <script>
+		$(document).ready(function(){
+			$("#myModal").modal('show');
+		});
+	</script>
 </body>
 </html>

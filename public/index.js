@@ -6,7 +6,7 @@ var maxClusterZoomLevel = 11;
 var storeLocationDataUrl = 'static/data/ContosoCoffee.txt';
 
 //The URL to the icon image. 
-var iconImageUrl = 'static/images/CoffeeIcon.png';
+var iconImageUrl = 'static/images/salad.png';
 
 //An array of country region ISO2 values to limit searches to.
 var countrySet = ['US', 'CA', 'GB', 'FR','DE','IT','ES','NL','DK','IN'];      
@@ -58,10 +58,8 @@ function initialize() {
 		var data2 = map.layers.getRenderedShapes(map.getCamera().bounds, [iconLayer]);
 		
 		var final=  data2[Math.floor(Math.random() * data2.length)];
-		console.log("BUTTON CLICK", final);
+		// define a show pop up the same as this, but more fancy
 		showPopup(final);
-
-
         
     };
 
@@ -314,7 +312,7 @@ function updateListItems() {
         //Close the popup as clusters may be displayed on the map. 
         popup.close();
 
-        listPanel.innerHTML = '<div class="statusMessage">Search for a location, zoom the map, or press the "My Location" button to see individual locations.</div>';
+        // listPanel.innerHTML = '<div class="statusMessage">Search for a location, zoom the map, or press the "My Location" button to see individual locations.</div>';
     } else {
         //Update the location of the centerMarker.
         centerMarker.setOptions({
@@ -361,16 +359,16 @@ function updateListItems() {
 			//console.log("Data is", data);
 
             html.push('<div class="listItem" onclick="itemSelected(\'', shape.getId(), '\')"><div class="listItem-title">',
-                properties['Address'],
+                properties['RestaurantName'],
                 '</div>',
 
                 //Get a formatted address line 2 value that consists of City, Municipality, AdminDivision, and PostCode.
-                getAddressLine2(properties),
-                '<br />',
+                // getAddressLine2(properties),
+                // '<br />',
 
                 //Convert the closing time into a nicely formated time.
-                getOpenTillTime(properties),
-                '<br />',
+                // getOpenTillTime(properties),
+                // '<br />',
 
                 //Get the distance of the shape.
                 distances[shape.getId()],
@@ -433,7 +431,7 @@ function itemSelected(id) {
     if (map.getCanvas().width < 700) {
         //When the map is small, offset the center of the map relative to the shape so that there is room for the popup to appear.
         offset = [0, -80];
-    }
+    }	
 
     map.setCamera({
         center: center,
@@ -472,10 +470,11 @@ function showPopup(shape) {
     var html = ['<div class="storePopup">'];
 
     html.push('<div class="popupTitle">',
-        properties['Address'],
+        properties['RestaurantName'],
         '<div class="popupSubTitle">',
-        getAddressLine2(properties),
+        
         '</div></div><div class="popupContent">',
+		getAddressLine2(properties),
 
         //Convert the closing time into a nicely formated time.
         //getOpenTillTime(properties),
@@ -520,15 +519,15 @@ function getAddressLine2(properties) {
     var html = [properties['City']];
 
     if (properties['Locality']) {
-        html.push(', ', properties['Locality']);
+        html.push('<br> Locality : ', properties['Locality']);
     }
 
     if (properties['AverageCostfortwo']) {
-        html.push(', ', properties['AverageCostfortwo']);
+        html.push('<br> Average cost :  ', properties['AverageCostfortwo']);
     }
 
     if (properties['Cuisines']) {
-        html.push(' ', properties['Cuisines']);
+        html.push('<br> Cusinines : ', properties['Cuisines']);
     }
 
     return html.join('');
